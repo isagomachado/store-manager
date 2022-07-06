@@ -13,7 +13,8 @@ const productsController = {
   },
 
   async getById(req, res) {
-    const { id } = req.params;
+    const { id } = await productsService.verifyId(req.params);
+
     const product = await productsService.getById(id);
 
     if (!product) {
