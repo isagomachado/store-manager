@@ -39,4 +39,16 @@ describe('models/productModels', () => {
       chai.expect(producstModel.getById()).to.eventually.deep.equal({});
     });
   });
+
+  describe('add', () => {
+    it('Deve disparar um erro caso o connection.query retorne um erro', () => {
+      sinon.stub(connection, 'query').rejects();
+      chai.expect(producstModel.add({})).to.eventually.be.rejected;
+    });
+
+    it('deve retornar o id inserido caso dê sucesso', () => {
+      sinon.stub(connection, 'query').resolves([{ insertId: 1 }]);
+      chai.expect(producstModel.getById({})).to.eventually.equal(1);
+    });
+  });
 });

@@ -25,13 +25,18 @@ const productsController = {
   },
 
   async add(req, res) {
-    // const { id } = await productsService.verifyId(req.params);
+    const data = await productsService.validateBodyAdd(req.body);
+    
+    if (data.details[0].message === '"name" is required') {
+      res.status(400).json({ message: '"name" is required' });
+    }
 
-    const id = await productsService.add(req.body);
+    if (data.details[0].message === '"name" length must be at least 5 characters long') {
+      res.status(422).json({ message: '"name" length must be at least 5 characters long' });
+    }
+    
+    const id = await productsService.add(data);
 
-    // if (!product) {
-    //   res.status(404).json({ message: 'Product not found' });
-    // }
 
     const product = await productsService.getById(id);
 
