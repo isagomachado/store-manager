@@ -16,6 +16,17 @@ describe('controllers/productsController', () => {
       chai.expect(productsController.getAll({}, {})).to.eventually.be.rejected;
     });
 
+    it('Deve retornar res.status(404) e res.json()', async () => {
+      const res = {
+        status: sinon.stub().callsFake(() => res),
+        json: sinon.stub().returns(),
+      }
+      sinon.stub(productsService, 'getAll').resolves(false);
+      await productsController.getAll({}, res);
+      chai.expect(res.status.getCall(0).args[0]).to.equal(404);
+      chai.expect(res.json.getCall(0).args[0]).to.deep.equal({ message: 'Product not found' });
+    });
+
     it('Deve retornar res.status(200) e res.json()', async () => {
       const res = {
         status: sinon.stub().callsFake(() => res),
@@ -38,6 +49,18 @@ describe('controllers/productsController', () => {
       sinon.stub(productsService, 'verifyId').resolves(1);
       sinon.stub(productsService, 'getById').rejects();
       chai.expect(productsController.getById({}, {})).to.eventually.be.rejected;
+    });
+
+    it('Deve retornar res.status(404) e res.json()', async () => {
+      const res = {
+        status: sinon.stub().callsFake(() => res),
+        json: sinon.stub().returns(),
+      }
+      sinon.stub(productsService, 'verifyId').resolves(1);
+      sinon.stub(productsService, 'getById').resolves(false);
+      await productsController.getById({}, res);
+      chai.expect(res.status.getCall(0).args[0]).to.equal(404);
+      chai.expect(res.json.getCall(0).args[0]).to.deep.equal({ message: 'Product not found' });
     });
 
     it('Deve retornar res.status(200) e res.json()', async () => {
