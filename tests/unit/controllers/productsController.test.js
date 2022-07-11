@@ -46,10 +46,10 @@ describe('controllers/productsController', () => {
         json: sinon.stub().returns(),
       }
       sinon.stub(productsService, 'verifyId').resolves(1);
-      sinon.stub(productsService, 'getById').resolves([]);
+      sinon.stub(productsService, 'getById').resolves({});
       await productsController.getById({}, res);
       chai.expect(res.status.getCall(0).args[0]).to.equal(200);
-      chai.expect(res.json.getCall(0).args[0]).to.deep.equal([]);
+      chai.expect(res.json.getCall(0).args[0]).to.deep.equal({});
     });
   });
 });

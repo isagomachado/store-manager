@@ -20,6 +20,19 @@ const productsModel = {
     
     return item;
   },
+
+  async add(data) {
+    const sql = `
+      INSERT INTO StoreManager.products (name)
+      VALUES (?);
+    `;
+
+    const [{ insertId }] = await connection.query(sql, [
+      data.name,
+    ]);
+
+    return insertId;
+  },
 };
 
 module.exports = productsModel;
