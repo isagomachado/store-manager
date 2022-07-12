@@ -4,8 +4,12 @@ const throwInvalidIdError = (message) => {
   throw error;
 };
 
-const useSchema = (schema) => (aux) => {
-  const value = schema.validate(aux);
+const useSchema = (schema) => async (aux) => {
+  const value = await schema.validate(aux);
+
+  // if (error) {
+  //   return error;
+  // };
 
   return value;
 };

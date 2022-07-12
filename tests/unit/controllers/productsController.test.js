@@ -6,6 +6,7 @@ chai.use(chaiAsPromised);
 
 const productsService = require('../../../services/productsService');
 const productsController = require('../../../controllers/productsController');
+const Joi = require('joi');
 
 describe('controllers/productsController', () => {
   beforeEach(sinon.restore);
@@ -86,27 +87,82 @@ describe('controllers/productsController', () => {
       const res = {
         status: sinon.stub().callsFake(() => res),
         json: sinon.stub().returns(),
+      };
+
+      const req = {
+        body: {
+          name: '',
+        }
       }
-      sinon.stub(productsService, 'validateBodyAdd').resolves({});
-      await productsController.add({}, res);
+
+      const aux = {
+        error: {
+          details: [
+            {
+              message: '"name" is required',
+            }
+          ],
+        },
+      };
+
+      sinon.stub(productsService, 'validateBodyAdd').returns(aux);
+      // sinon.stub(productsService, 'add').resolves(1);
+      // sinon.stub(productsService, 'getById').resolves({});
+      await productsController.add(req, res);
       chai.expect(res.status.getCall(0).args[0]).to.equal(400);
-      chai.expect(res.json.getCall(0).args[0]).to.deep.equal([{ message: '"name" is required' }]);
+      chai.expect(res.json.getCall(0).args[0]).to.deep.equal({ message: '"name" is required' });
     });
 
     it('Deve retornar res.status(422) e res.json()', async () => {
       const res = {
         status: sinon.stub().callsFake(() => res),
         json: sinon.stub().returns(),
-      }
-      sinon.stub(productsService, 'validateBodyAdd').resolves();
-      await productsController.add({}, res);
+      };
+
+      const req = {
+        body: {
+          name: '',
+        },
+      };
+
+      const aux = {
+        error: {
+          details: [
+            {
+              message: '"name" length must be at least 5 characters long',
+            }
+          ],
+        },
+      };
+      sinon.stub(productsService, 'validateBodyAdd').returns(aux);
+      await productsController.add(req, res);
       chai.expect(res.status.getCall(0).args[0]).to.equal(422);
-      chai.expect(res.json.getCall(0).args[0]).to.deep.equal([{ message: '"name" length must be at least 5 characters long' }]);
+      chai.expect(res.json.getCall(0).args[0]).to.deep.equal({ message: '"name" length must be at least 5 characters long' });
     });
 
-    // it('deve retornar o id inserido caso dê sucesso', () => {
-    //   sinon.stub(connection, 'query').resolves([{ insertId: 1 }]);
-    //   chai.expect(producstModel.getById({})).to.eventually.equal(1);
-    // });
+    it('Deve retornar res.status(201) e res.json()', async () => {
+      const res = {
+        status: sinon.stub().callsFake(() => res),
+        json: sinon.stub().returns(),
+      };
+
+      const req = {
+        body: {
+          name: '',
+        },
+      };
+
+      const aux = {
+        value: {
+          name: '',
+        }
+      };
+      sinon.stub(productsService, 'validateBodyAdd').returns(aux);
+      sinon.stub(productsService, 'add').resolves(1);
+      sinon.stub(productsService, 'getById').resolves({});
+      await productsController.add(req, res);
+      chai.expect(res.status.getCall(0).args[0]).to.equal(201);
+      chai.expect(res.json.getCall(0).args[0]).to.deep.equal({});
+    });
   });
 });

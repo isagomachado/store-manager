@@ -25,11 +25,8 @@ const productsController = {
   },
 
   async add(req, res) {
-    const { error, value } = productsService.validateBodyAdd(req.body);
-  
-    console.log(value);
-    console.log(error);
-    
+    const { error, value } = await productsService.validateBodyAdd(req.body);
+
     if (error) {
       if (error.details[0].message === '"name" is required') {
         return res.status(400).json({ message: '"name" is required' });
