@@ -18,7 +18,7 @@ describe('services/utils', () => {
 
     it('Deve retornar o objeto tratado se sucesso', () => {
       sinon.stub(schema, 'validateAsync').resolves({});
-      chai.expect(useSchema(schema)({})).to.deep.equal({value: {}});
+      chai.expect(useSchema(schema)({})).to.eventually.deep.equal({value: {}});
     });
   });
 });
