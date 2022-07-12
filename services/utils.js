@@ -7,10 +7,6 @@ const throwInvalidIdError = (message) => {
 const useSchema = (schema) => (aux) => {
   const value = schema.validate(aux);
 
-  // if (error) {
-  //   return error;
-  // }
-
   return value;
 };
 

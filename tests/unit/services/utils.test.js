@@ -13,12 +13,12 @@ describe('services/utils', () => {
   describe('useSchema', () => {
     it('Deve disparar um erro caso o Joi dispare', () => {
       sinon.stub(schema, 'validateAsync').rejects();
-      chai.expect(useSchema(schema)({})).to.eventually.be.rejected;
+      chai.expect(useSchema(schema)({})).to.be.rejected;
     });
 
     it('Deve retornar o objeto tratado se sucesso', () => {
       sinon.stub(schema, 'validateAsync').resolves({});
-      chai.expect(useSchema(schema)({})).to.eventually.deep.equal({});
+      chai.expect(useSchema(schema)({})).to.deep.equal({value: {}});
     });
   });
 });

@@ -27,8 +27,8 @@ const productsController = {
   async add(req, res) {
     const { error, value } = productsService.validateBodyAdd(req.body);
   
-    console.log(value)
-    console.log(error)
+    console.log(value);
+    console.log(error);
     
     if (error) {
       if (error.details[0].message === '"name" is required') {
@@ -36,20 +36,19 @@ const productsController = {
       }
 
       if (error.details[0].message === '"name" length must be at least 5 characters long') {
-        return res.status(422).json({ message: '"name" length must be at least 5 characters long' });
+        return res
+          .status(422)
+          .json({
+            message: '"name" length must be at least 5 characters long',
+          });
       }
     }
-  
-    try {
-      const id = await productsService.add(value);
 
-      const product = await productsService.getById(id);
+    const id = await productsService.add(value);
 
-      return res.status(201).json(product);
-    } catch (error) {
-      console.log(error)
-      next(error)
-    }
+    const product = await productsService.getById(id);
+
+    return res.status(201).json(product);
   },
 };
 
