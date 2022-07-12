@@ -75,4 +75,38 @@ describe('controllers/productsController', () => {
       chai.expect(res.json.getCall(0).args[0]).to.deep.equal({});
     });
   });
+
+  describe('add', () => {
+    it('Deve disparar um erro caso o productsService.validateBodyAdd retorne um erro', () => {
+      sinon.stub(productsService, 'validateBodyAdd').rejects();
+      chai.expect(productsController.add({}, {})).to.eventually.be.rejected;
+    });
+
+    it('Deve retornar res.status(400) e res.json()', async () => {
+      const res = {
+        status: sinon.stub().callsFake(() => res),
+        json: sinon.stub().returns(),
+      }
+      sinon.stub(productsService, 'validateBodyAdd').resolves({});
+      await productsController.add({}, res);
+      chai.expect(res.status.getCall(0).args[0]).to.equal(400);
+      chai.expect(res.json.getCall(0).args[0]).to.deep.equal([{ message: '"name" is required' }]);
+    });
+
+    it('Deve retornar res.status(422) e res.json()', async () => {
+      const res = {
+        status: sinon.stub().callsFake(() => res),
+        json: sinon.stub().returns(),
+      }
+      sinon.stub(productsService, 'validateBodyAdd').resolves();
+      await productsController.add({}, res);
+      chai.expect(res.status.getCall(0).args[0]).to.equal(422);
+      chai.expect(res.json.getCall(0).args[0]).to.deep.equal([{ message: '"name" length must be at least 5 characters long' }]);
+    });
+
+    // it('deve retornar o id inserido caso dê sucesso', () => {
+    //   sinon.stub(connection, 'query').resolves([{ insertId: 1 }]);
+    //   chai.expect(producstModel.getById({})).to.eventually.equal(1);
+    // });
+  });
 });

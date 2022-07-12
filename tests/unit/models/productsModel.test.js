@@ -48,7 +48,7 @@ describe('models/productModels', () => {
 
     it('deve retornar o id inserido caso dê sucesso', () => {
       sinon.stub(connection, 'query').resolves([{ insertId: 1 }]);
-      chai.expect(producstModel.getById({})).to.eventually.equal(1);
+      chai.expect(producstModel.add({})).to.eventually.equal({ insertId: 1 });
     });
   });
 });

@@ -25,21 +25,31 @@ const productsController = {
   },
 
   async add(req, res) {
-    const data = await productsService.validateBodyAdd(req.body);
+    const { error, value } = productsService.validateBodyAdd(req.body);
+  
+    console.log(value)
+    console.log(error)
     
-    if (data.details[0].message === '"name" is required') {
-      res.status(400).json({ message: '"name" is required' });
+    if (error) {
+      if (error.details[0].message === '"name" is required') {
+        return res.status(400).json({ message: '"name" is required' });
+      }
+
+      if (error.details[0].message === '"name" length must be at least 5 characters long') {
+        return res.status(422).json({ message: '"name" length must be at least 5 characters long' });
+      }
     }
+  
+    try {
+      const id = await productsService.add(value);
 
-    if (data.details[0].message === '"name" length must be at least 5 characters long') {
-      res.status(422).json({ message: '"name" length must be at least 5 characters long' });
+      const product = await productsService.getById(id);
+
+      return res.status(201).json(product);
+    } catch (error) {
+      console.log(error)
+      next(error)
     }
-    
-    const id = await productsService.add(data);
-
-    const product = await productsService.getById(id);
-
-    res.status(201).json(product);
   },
 };
 

@@ -48,4 +48,16 @@ describe('services/productsService', () => {
       chai.expect(productsService.getById()).to.eventually.deep.equal({});
     });
   });
+
+  describe('add', () => {
+    it('Deve disparar um erro caso o productsModel.add retorne um erro', () => {
+      sinon.stub(productsModel, 'add').rejects();
+      chai.expect(productsService.add({})).to.eventually.be.rejected;
+    });
+
+    it('deve retornar o id inserido caso dê sucesso', () => {
+      sinon.stub(productsModel, 'add').resolves([{ insertId: 1 }]);
+      chai.expect(productsService.add({})).to.eventually.equal(1);
+    });
+  });
 });
