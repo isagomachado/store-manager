@@ -49,6 +49,10 @@ const productsService = {
     if (!exists) throwNotFoundError('Product not found');
   },
 
+  async remove(id) {
+    await productsModel.remove(id);
+  },
+
 };
 
 module.exports = productsService;

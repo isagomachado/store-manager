@@ -73,6 +73,14 @@ const productsController = {
 
     res.status(200).json(product);
   },
+
+  async remove(req, res) {
+    const { id } = await productsService.verifyId(req.params);
+    await productsService.checkExists(id);
+    await productsService.remove(id);
+
+    res.sendStatus(204);
+  },
 };
 
 module.exports = productsController;
