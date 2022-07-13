@@ -78,8 +78,8 @@ describe('controllers/productsController', () => {
   });
 
   describe('add', () => {
-    it('Deve disparar um erro caso o productsService.validateBodyAdd retorne um erro', () => {
-      sinon.stub(productsService, 'validateBodyAdd').rejects();
+    it('Deve disparar um erro caso o productsService.validateBody retorne um erro', () => {
+      sinon.stub(productsService, 'validateBody').rejects();
       chai.expect(productsController.add({}, {})).to.eventually.be.rejected;
     });
 
@@ -105,7 +105,7 @@ describe('controllers/productsController', () => {
         },
       };
 
-      sinon.stub(productsService, 'validateBodyAdd').returns(aux);
+      sinon.stub(productsService, 'validateBody').returns(aux);
       // sinon.stub(productsService, 'add').resolves(1);
       // sinon.stub(productsService, 'getById').resolves({});
       await productsController.add(req, res);
@@ -134,7 +134,7 @@ describe('controllers/productsController', () => {
           ],
         },
       };
-      sinon.stub(productsService, 'validateBodyAdd').returns(aux);
+      sinon.stub(productsService, 'validateBody').returns(aux);
       await productsController.add(req, res);
       chai.expect(res.status.getCall(0).args[0]).to.equal(422);
       chai.expect(res.json.getCall(0).args[0]).to.deep.equal({ message: '"name" length must be at least 5 characters long' });
@@ -157,7 +157,7 @@ describe('controllers/productsController', () => {
           name: '',
         }
       };
-      sinon.stub(productsService, 'validateBodyAdd').returns(aux);
+      sinon.stub(productsService, 'validateBody').returns(aux);
       sinon.stub(productsService, 'add').resolves(1);
       sinon.stub(productsService, 'getById').resolves({});
       await productsController.add(req, res);

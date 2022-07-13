@@ -11,4 +11,6 @@ productsRoutes.get('/:id', productsController.getById);
 
 productsRoutes.post('/', productsController.add);
 
+productsRoutes.put('/:id', productsController.edit);
+
 module.exports = productsRoutes;

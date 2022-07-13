@@ -1,15 +1,23 @@
 const Joi = require('joi');
 const productsModel = require('../models/productsModel');
-const { throwInvalidIdError, useSchema } = require('./utils');
+const { throwInvalidIdError, useSchema, throwNotFoundError } = require('./utils');
 
 const productsService = {
-  validateBodyAdd: useSchema(Joi.object({
+  validateBody: useSchema(Joi.object({
     name: Joi.string().required().max(30).min(5)
       .messages({
       'any.required': '"name" is required',
       'array.min': '"name" length must be at least 5 characters long',
     }),
   })),
+
+  // validateBodyAEdit: useSchema(Joi.object({
+  //   name: Joi.string().max(30).min(5)
+  //     .messages({
+  //     'any.required': '"name" is required',
+  //     'array.min': '"name" length must be at least 5 characters long',
+  //   }),
+  // }).min(1)),
 
   async verifyId(id) {
     const result = id !== Number(id);
@@ -31,6 +39,16 @@ const productsService = {
     const id = await productsModel.add(data);
     return id;
   },
+
+  async edit(id, name) {
+    await productsModel.edit(id, name);
+  },
+
+  async checkExists(id) {
+    const exists = await productsModel.exists(id);
+    if (!exists) throwNotFoundError('Product not found');
+  },
+
 };
 
 module.exports = productsService;
